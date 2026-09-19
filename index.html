@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PyPro Mastery | Zero-to-Pro Interactive Python Platform</title>
+  <meta name="description" content="Master Python from scratch to enterprise software architect with in-browser WebAssembly execution, automated verification, and intelligent mentor guidance.">
+
+  <!-- Google Fonts: Outfit, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="styles/theme.css">
+  <link rel="stylesheet" href="styles/layout.css">
+  <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+  <div id="app">
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="app-header" id="app-header">
+      <div class="header-left">
+        <button class="header-btn" id="btn-toggle-sidebar" title="Toggle Curriculum Roadmap" aria-label="Toggle Syllabus">
+          ☰ <span>Roadmap</span>
+        </button>
+
+        <div class="brand-container" id="brand-home" onclick="app.loadModule('m1_intro')">
+          <div class="brand-logo">🐍</div>
+          <div class="brand-title">
+            PyPro Mastery
+            <span class="brand-badge">Zero-to-Pro</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <!-- Global Progress Tracker -->
+        <div class="progress-container" id="progress-widget">
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-bar-fill"></div>
+          </div>
+          <span class="progress-label" id="progress-label">0/16 Modules (0%)</span>
+        </div>
+
+        <!-- XP and Streak Pills -->
+        <div class="stat-pill xp" id="stat-pill-xp">
+          <span>⚡</span>
+          <span id="stat-xp">0 XP</span>
+        </div>
+        <div class="stat-pill streak" id="stat-pill-streak">
+          <span id="stat-streak">1 Day Streak 🔥</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <!-- Action Buttons -->
+        <button class="header-btn btn-run" id="btn-run-code" title="Execute Code (Ctrl + Enter)">
+          ▶ <span>Run Code</span>
+        </button>
+
+        <button class="header-btn btn-verify" id="btn-verify-task" title="Verify Solution against Automated Tests">
+          ✓ <span>Verify Task</span>
+        </button>
+
+        <button class="header-btn" id="btn-ask-mentor" title="Get Guidance from Architect AI">
+          🤖 <span>Mentor</span>
+        </button>
+
+        <button class="header-btn" id="btn-toggle-sound" title="Toggle Sound FX">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- WORKSPACE AREA -->
+    <div class="workspace-wrapper">
+      <!-- SYLLABUS SIDEBAR -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+          <div class="sidebar-title">
+            <span>📚 Curriculum Roadmap</span>
+          </div>
+        </div>
+
+        <div class="sidebar-search">
+          <input 
+            type="text" 
+            id="module-search-input" 
+            class="search-input" 
+            placeholder="Search concepts (e.g. loops, OOP)..."
+            autocomplete="off"
+          />
+        </div>
+
+        <nav class="module-list" id="module-list" aria-label="Curriculum Modules">
+          <!-- Populated dynamically by app.js -->
+        </nav>
+      </aside>
+
+      <!-- SPLIT WORKSPACE -->
+      <main class="workspace-split" id="workspace-split">
+        <!-- LEFT PANE: THEORY, ANALOGIES & MISSION -->
+        <section class="pane-theory" id="pane-theory" aria-label="Lesson Instructions">
+          <div class="lesson-container" id="lesson-content">
+            <!-- Populated dynamically by app.js -->
+          </div>
+        </section>
+
+        <!-- HORIZONTAL RESIZER SPLITTER -->
+        <div class="split-resizer" id="split-resizer-h" title="Drag to resize panels"></div>
+
+        <!-- RIGHT PANE: CODE EDITOR & TERMINAL -->
+        <section class="pane-interactive" id="pane-interactive">
+          <!-- UPPER SECTION: CODE EDITOR -->
+          <div class="editor-section" id="editor-section">
+            <div class="editor-toolbar">
+              <div class="editor-tabs">
+                <div class="editor-tab">
+                  <span>📄 main.py</span>
+                </div>
+              </div>
+
+              <div class="editor-status-indicator">
+                <span class="status-dot" id="engine-status-dot"></span>
+                <span id="engine-status-label">Initializing Python Runtime...</span>
+              </div>
+
+              <div class="editor-tools">
+                <button class="editor-tool-btn" id="btn-copy-code" title="Copy Code">
+                  📋 Copy
+                </button>
+                <button class="editor-tool-btn" id="btn-reset-code" title="Reset to Starter Code">
+                  ↺ Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Custom Code Editor -->
+            <div class="editor-container" id="editor-container">
+              <div class="editor-gutter" id="editor-gutter">
+                <div class="editor-gutter-line">1</div>
+              </div>
+
+              <div class="editor-content-area">
+                <pre class="editor-highlight" id="code-highlight" aria-hidden="true"></pre>
+                <textarea 
+                  id="code-input" 
+                  class="editor-textarea" 
+                  spellcheck="false" 
+                  autocapitalize="off" 
+                  autocomplete="off" 
+                  placeholder="# Write your Python code here..."
+                  aria-label="Python Code Editor"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="editor-footer">
+              <span id="editor-line-col">Ln 1, Col 1</span>
+              <span>Python 3 • Tab Size: 4 • Press Ctrl+Enter to Run</span>
+            </div>
+          </div>
+
+          <!-- VERTICAL RESIZER SPLITTER -->
+          <div class="pane-v-resizer" id="split-resizer-v" title="Drag to resize terminal"></div>
+
+          <!-- LOWER SECTION: TERMINAL CONSOLE -->
+          <div class="terminal-section" id="terminal-section">
+            <div class="terminal-nav">
+              <div class="terminal-tabs">
+                <button class="terminal-tab-btn active" data-tab="output" onclick="app.switchTerminalTab('output')">
+                  <span>>_ Output</span>
+                </button>
+                <button class="terminal-tab-btn" data-tab="tests" onclick="app.switchTerminalTab('tests')">
+                  <span>✓ Test Checks</span>
+                </button>
+                <button class="terminal-tab-btn" data-tab="mentor" onclick="app.switchTerminalTab('mentor')">
+                  <span>🤖 Architect Mentor</span>
+                  <span class="tab-badge">AI</span>
+                </button>
+              </div>
+
+              <div class="terminal-actions">
+                <button class="terminal-clear-btn" id="btn-clear-terminal" title="Clear Console">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <!-- Terminal Tab Views -->
+            <div class="terminal-view-container" id="terminal-container">
+              <!-- Output View -->
+              <div class="terminal-view active" id="terminal-view-output">
+                <div class="term-welcome">PyPro Interactive Console ready. Output will stream here.</div>
+              </div>
+
+              <!-- Tests View -->
+              <div class="terminal-view" id="terminal-view-tests">
+                <div class="term-dim">Click 'Verify Task' in the top bar to run automated test validation.</div>
+              </div>
+
+              <!-- Mentor View -->
+              <div class="terminal-view" id="terminal-view-mentor">
+                <div id="mentor-feedback-content">
+                  <div class="mentor-card">
+                    <div class="mentor-header">
+                      <div class="mentor-avatar">🤖</div>
+                      <div>
+                        <div class="mentor-name">Architect AI Mentor</div>
+                        <div class="mentor-role">Ready to help</div>
+                      </div>
+                    </div>
+                    <div class="mentor-message">
+                      <p>Hello, Future Software Architect! I'm your dedicated pair programmer.</p>
+                      <p style="margin-top: 0.5rem; color: #94a3b8;">Whenever you encounter an error or fail a test case, I'll translate the message into plain English and guide you step-by-step.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- CELEBRATION MODAL -->
+    <div class="modal-overlay" id="celebration-modal" role="dialog" aria-modal="true" aria-labelledby="modal-module-title">
+      <div class="modal-content">
+        <div class="modal-icon-badge">🏆</div>
+        <h2 class="modal-title">Module Mastered!</h2>
+        <div class="modal-desc" id="modal-module-title">The First Spark: Printing & Comments</div>
+        
+        <div class="modal-stats">
+          <div>
+            <div class="modal-stat-val" id="modal-earned-xp">+50 XP</div>
+            <div class="modal-stat-lbl">Points Earned</div>
+          </div>
+          <div>
+            <div class="modal-stat-val">100%</div>
+            <div class="modal-stat-lbl">Accuracy</div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="header-btn" id="modal-btn-close">Stay on Lesson</button>
+          <button class="header-btn btn-run" id="modal-btn-next">Next Module ➔</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toast-container"></div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="js/curriculum.js"></script>
+  <script src="js/pyEngine.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/mentor.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
